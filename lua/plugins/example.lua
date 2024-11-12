@@ -7,12 +7,12 @@ if true then return {} end
 -- In your plugin files, you can:
 -- * add extra plugins
 -- * disable/enabled LazyVim plugins
--- * override the configuration of LazyVim plugins
 return {
   -- add gruvbox
   { "ellisonleao/gruvbox.nvim" },
 
   -- Configure LazyVim to load gruvbox
+  -- * override the configuration of LazyVim plugins
   {
     "LazyVim/LazyVim",
     opts = {
