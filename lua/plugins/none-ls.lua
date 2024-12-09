@@ -9,10 +9,15 @@ return {
       null_ls.setup({
         debug = true,
         sources = {
-          require("none-ls.diagnostics.eslint_d"),
+          require("none-ls.diagnostics.eslint_d").with({
+            command = "eslint_d",
+            extra_args = { "--stdin-filename", "$FILENAME", "--config", "eslint.config.mjs" },
+            prefer_local = "node_modules/.bin",
+          }),
           null_ls.builtins.formatting.stylua,
           null_ls.builtins.formatting.prettier.with({
-            filetypes = { "javascript", "typescript", "css", "html", "json" }, -- Exclude "markdown"
+            extra_args = { "--single-quote", "false" },
+            filetypes = { "javascript", "typescript", "typescriptreact", "css", "html", "json" },
           }),
           null_ls.builtins.formatting.goimports,
           null_ls.builtins.diagnostics.golangci_lint,

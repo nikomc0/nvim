@@ -89,6 +89,10 @@ return {
 
       -- ESLint server setup
       lspconfig.eslint.setup({
+        handler = {
+          -- Suppress the warning for workspace/didChangeWorkspaceFolders
+          ["workspace/didChangeWorkspaceFolders"] = function() end,
+        },
         capabilities = capabilities,
         on_attach = function(client, bufnr)
           -- Enable document formatting for eslint
@@ -105,6 +109,9 @@ return {
             autoFixOnSave = true, -- Automatically fixes issues on save
             format = {
               enable = true, -- Enable formatting with eslint
+            },
+            lint = {
+              enable = true, -- Enable linting with eslint
             },
           },
         },

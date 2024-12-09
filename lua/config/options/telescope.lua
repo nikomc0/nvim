@@ -1,3 +1,23 @@
+local previewers = require("telescope.previewers")
+local Job = require("plenary.job")
+
+local new_maker = function(filepath, bufnr, opts)
+  filepath = vim.fn.expand(filepath)
+  Job:new({
+    command = "file",
+    args = { filepath },
+    on_exit = function(j)
+      if j:result()[1]:find("text") then
+        previewers.buffer_previewer_maker(filepath, bufnr, opts)
+      else
+        vim.schedule(function()
+          vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, { "Binary file preview disabled" })
+        end)
+      end
+    end,
+  }):sync()
+end
+
 local options = {
   defaults = {
     vimgrep_arguments = {
@@ -30,25 +50,34 @@ local options = {
       preview_cutoff = 120,
     },
     file_sorter = require("telescope.sorters").get_fuzzy_file,
-    file_ignore_patterns = { "node_modules" },
+    file_ignore_patterns = { "node_modules", ".git/", "dist/", ".cache/" },
     generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
     path_display = { "truncate" },
-    winblend = 0,
+    winblend = 10,
     border = {},
     borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
     color_devicons = true,
-    set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
+    set_env = { ["COLORTERM"] = "truecolor" },
     file_previewer = require("telescope.previewers").vim_buffer_cat.new,
     grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
     qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
-    -- Developer configurations: Not meant for general override
-    buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker,
+    buffer_previewer_maker = new_maker,
     mappings = {
+      i = {
+        ["<C-x>"] = require("telescope.actions").select_horizontal,
+        ["<C-v>"] = require("telescope.actions").select_vertical,
+        ["<C-t>"] = require("telescope.actions").select_tab,
+      },
       n = { ["q"] = require("telescope.actions").close },
     },
   },
 
   extensions_list = { "themes", "terms" },
 }
+
+-- Load extensions if available
+pcall(function()
+  require("telescope").load_extension("fzf")
+end)
 
 return options
