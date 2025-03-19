@@ -1,6 +1,6 @@
 -- bootstrap lazy.nvim, LazyVim and your plugins
 require("config.lazy")
-
+vim.opt.list = false
 vim.opt.mouse = "a"
 
 vim.opt.number = true -- Enable absolute line numbers

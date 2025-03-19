@@ -3,19 +3,7 @@ return {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.8",
     dependencies = { "nvim-lua/plenary.nvim" },
-    keys = {
-      -- add a keymap to browse plugin files
-      -- stylua: ignore
-      {
-        "<leader>fp",
-        function()
-          require("telescope.builtin").find_files({
-            cwd = require("lazy.core.config").options.root
-          })
-        end,
-        desc = "Find Plugin File",
-      },
-    },
+    keys = require("config.keymaps.telescope_keys").telescope,
     -- change some options
     opts = require("config.options.telescope"),
   },
@@ -25,6 +13,13 @@ return {
     "nvim-telescope/telescope-ui-select.nvim",
     config = function()
       require("telescope").setup({
+        pickers = {
+          live_grep = {
+            additional_args = function(opts)
+              return {}
+            end,
+          },
+        },
         extensions = {
           ["ui-select"] = {
             require("telescope.themes").get_dropdown({}),

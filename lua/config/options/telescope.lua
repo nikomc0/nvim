@@ -1,4 +1,5 @@
 local previewers = require("telescope.previewers")
+local actions = require("telescope.actions")
 local Job = require("plenary.job")
 
 local new_maker = function(filepath, bufnr, opts)
@@ -64,11 +65,14 @@ local options = {
     buffer_previewer_maker = new_maker,
     mappings = {
       i = {
-        ["<C-x>"] = require("telescope.actions").select_horizontal,
-        ["<C-v>"] = require("telescope.actions").select_vertical,
-        ["<C-t>"] = require("telescope.actions").select_tab,
+        ["<C-x>"] = actions.select_horizontal,
+        ["<C-v>"] = actions.select_vertical,
+        ["<C-t>"] = actions.select_tab,
+        ["<C-k>"] = actions.move_selection_previous, --move to prev result
+        ["<C-j>"] = actions.move_selection_next, -- move to next result
+        ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
       },
-      n = { ["q"] = require("telescope.actions").close },
+      n = { ["q"] = actions.close },
     },
   },
 
